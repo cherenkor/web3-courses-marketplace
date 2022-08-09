@@ -1,8 +1,22 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import React, { PropsWithChildren } from "react";
+import { NextComponentType, NextPageContext } from "next";
+import type { AppInitialProps } from "next/app";
 
-function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+import "@styles/globals.css";
+
+type Props = AppInitialProps & {
+  Component: NextComponentType<NextPageContext, any> & {
+    Layout: ({ children }: PropsWithChildren) => JSX.Element;
+  };
+};
+
+function MyApp({ Component, pageProps }: Props) {
+  const Layout = Component.Layout;
+  const children = <Component {...pageProps} />;
+
+  if (!Layout) return <>{children}</>;
+
+  return <Layout>{children}</Layout>;
 }
 
-export default MyApp
+export default MyApp;
