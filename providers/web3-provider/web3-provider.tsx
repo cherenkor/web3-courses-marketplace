@@ -3,32 +3,41 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
 
-interface IWeb3Api {
+interface IWeb3ApiState {
   web3: Web3 | null;
   provider: any | null;
   contract: any | null;
-  isInitialized: boolean | null;
+  isLoading: boolean;
 }
 
-const Web3Context = createContext<IWeb3Api>({
+interface IWeb3ApiContext extends IWeb3ApiState {
+  isWeb3Loaded: boolean;
+  connect: () => Promise<void>;
+}
+
+const initialWeb3State: IWeb3ApiState = {
   web3: null,
   provider: null,
   contract: null,
-  isInitialized: null,
-});
+  isLoading: true,
+};
 
-export const Web3Provider = ({ children }: PropsWithChildren) => {
-  const [web3Api, setWeb3Api] = useState<IWeb3Api>({
-    web3: null,
-    provider: null,
-    contract: null,
-    isInitialized: null,
-  });
+const Web3Context = createContext<IWeb3ApiContext>(
+  {} as IWeb3ApiContext
+);
+
+export const Web3Provider = ({
+  children,
+}: PropsWithChildren) => {
+  const [web3Api, setWeb3Api] = useState<IWeb3ApiState>(
+    initialWeb3State
+  );
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -41,12 +50,12 @@ export const Web3Provider = ({ children }: PropsWithChildren) => {
           provider,
           web3,
           contract: null,
-          isInitialized: true,
+          isLoading: false,
         });
       } else {
         setWeb3Api((prev) => ({
           ...prev,
-          isInitialized: true,
+          isLoading: false,
         }));
         console.error("Please, install Metamask.");
       }
@@ -55,8 +64,32 @@ export const Web3Provider = ({ children }: PropsWithChildren) => {
     loadProvider();
   }, []);
 
+  const _web3Api = useMemo(() => {
+    return {
+      ...web3Api,
+      isWeb3Loaded: !!web3Api.web3,
+      connect: async () => {
+        if (!web3Api.provider)
+          return console.error("Cannot connect to Metamsk");
+
+        try {
+          await web3Api.provider.request({
+            method: "eth_requestAccounts",
+          });
+        } catch {
+          alert(
+            "Cannot retreive account. Page will be reloaded."
+          );
+          location.reload();
+        }
+      },
+    };
+  }, [web3Api]);
+
   return (
-    <Web3Context.Provider value={web3Api}>{children}</Web3Context.Provider>
+    <Web3Context.Provider value={_web3Api}>
+      {children}
+    </Web3Context.Provider>
   );
 };
 

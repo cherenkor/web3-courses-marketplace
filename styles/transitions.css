@@ -1,0 +1,30 @@
+.slideIn {
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+  animation-name: slide;
+}
+
+@keyframes slide {
+  from {
+    opacity: 0;
+    transform: translate(0, 12px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.fadeIn {
+  animation: 0.4s fadeIn forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

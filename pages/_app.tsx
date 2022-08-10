@@ -3,10 +3,13 @@ import { NextComponentType, NextPageContext } from "next";
 import type { AppInitialProps } from "next/app";
 
 import "@styles/globals.css";
+import "@styles/transitions.css";
 
 type Props = AppInitialProps & {
   Component: NextComponentType<NextPageContext, any> & {
-    Layout: ({ children }: PropsWithChildren) => JSX.Element;
+    Layout: ({
+      children,
+    }: PropsWithChildren) => JSX.Element;
   };
 };
 

@@ -9,7 +9,13 @@ module.exports = {
       maxWidth: {
         "8xl": "1920px"
       },
-    },
+      },
+      variants: {
+        extend: {
+          opacity: ['disabled'],
+          cursor: ['disabled'],
+        }
+      }
   },
   plugins: [],
 }
