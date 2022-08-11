@@ -8,7 +8,6 @@ import {
 } from "react";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
-
 interface IWeb3ApiState {
   web3: Web3 | null;
   provider: any | null;
@@ -28,16 +27,10 @@ const initialWeb3State: IWeb3ApiState = {
   isLoading: true,
 };
 
-const Web3Context = createContext<IWeb3ApiContext>(
-  {} as IWeb3ApiContext
-);
+const Web3Context = createContext<IWeb3ApiContext>({} as IWeb3ApiContext);
 
-export const Web3Provider = ({
-  children,
-}: PropsWithChildren) => {
-  const [web3Api, setWeb3Api] = useState<IWeb3ApiState>(
-    initialWeb3State
-  );
+export const Web3Provider = ({ children }: PropsWithChildren) => {
+  const [web3Api, setWeb3Api] = useState<IWeb3ApiState>(initialWeb3State);
 
   useEffect(() => {
     const loadProvider = async () => {
@@ -65,21 +58,20 @@ export const Web3Provider = ({
   }, []);
 
   const _web3Api = useMemo(() => {
+    const { web3, provider } = web3Api;
+
     return {
       ...web3Api,
-      isWeb3Loaded: !!web3Api.web3,
+      isWeb3Loaded: web3 != null,
       connect: async () => {
-        if (!web3Api.provider)
-          return console.error("Cannot connect to Metamsk");
+        if (!provider) return console.error("Cannot connect to Metamsk");
 
         try {
-          await web3Api.provider.request({
+          await provider.request({
             method: "eth_requestAccounts",
           });
         } catch {
-          alert(
-            "Cannot retreive account. Page will be reloaded."
-          );
+          alert("Cannot retreive account. Page will be reloaded.");
           location.reload();
         }
       },
@@ -87,9 +79,7 @@ export const Web3Provider = ({
   }, [web3Api]);
 
   return (
-    <Web3Context.Provider value={_web3Api}>
-      {children}
-    </Web3Context.Provider>
+    <Web3Context.Provider value={_web3Api}>{children}</Web3Context.Provider>
   );
 };
 

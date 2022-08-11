@@ -5,24 +5,45 @@ interface IProps extends PropsWithChildren {
   onClick?: () => void;
   isLoading?: boolean;
   disabled?: boolean;
+  hoverable?: boolean;
   className?: string;
+  variant?: "primary" | "secondary" | "danger" | "info" | "warning";
 }
 
 export const UiButton = ({
   isLoading,
   children,
-  className = "text-white bg-indigo-600 hover:bg-indigo-700 ",
+  className,
+  hoverable = true,
+  variant = "primary",
   ...props
 }: IProps) => {
-  console.log(isLoading);
+  const variants = {
+    primary: cn("text-white bg-indigo-600", {
+      "hover:bg-indigo-700": hoverable,
+    }),
+    secondary: cn("text-white bg-violet-600", {
+      "hover:bg-violet-700": hoverable,
+    }),
+    danger: cn("text-white bg-red-600", {
+      "hover:bg-red-700": hoverable,
+    }),
+    info: cn("text-black bg-sky-200", {
+      "hover:bg-sky-400": hoverable,
+    }),
+    warning: cn("text-white bg-orange-600", {
+      "hover:bg-orange-700": hoverable,
+    }),
+  };
 
   return (
     <button
       type="button"
       {...props}
       className={cn(
-        "disabled:opacity-50 disabled:cursor-not-allowed px-8 py-3 border cursor-pointer rounded-md text-base font-medium",
-        className
+        "disabled:opacity-50 disabled:cursor-not-allowed px-6 py-3 border cursor-pointer rounded-md text-base font-medium",
+        className,
+        variants[variant]
       )}
     >
       {isLoading ? (
