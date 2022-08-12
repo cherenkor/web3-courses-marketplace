@@ -1,12 +1,23 @@
+import { useWeb3 } from "providers/web3-provider/web3-provider";
 import React from "react";
 
-export const WalletBar = () => {
+interface IProps {
+  address?: string;
+  network: {
+    data?: string;
+    target?: string;
+    isSupported: boolean;
+    hasInitialResponse: boolean;
+  };
+}
+
+export const WalletBar = ({ address, network }: IProps) => {
+  const { requireInstall } = useWeb3();
+
   return (
     <section className="text-white bg-indigo-600">
       <div className="p-8">
-        <h1 className="text-2xl">
-          Hello, 0xd9D5cD41Fe921A743F2b5Fe71CC3070F5C176208
-        </h1>
+        <h1 className="text-2xl">Hello, {address}</h1>
         <h2 className="subtitle mb-5 text-xl">
           I hope you are having a great day!
         </h2>
@@ -22,10 +33,30 @@ export const WalletBar = () => {
             </div>
           </div>
           <div>
-            <div>
-              <span>Currently on </span>
-              <strong className="text-2xl">Ethereum Main Network</strong>
-            </div>
+            {/* {!network.hasInitialResponse && <div>Loading...</div>} */}
+
+            {network.hasInitialResponse && !network?.isSupported && (
+              <div className="fadeIn bg-red-400 p-4 rounded-lg">
+                <div>Connected to the wrong network</div>
+                <div>
+                  Connect to:{" "}
+                  <strong className="text-2xl">{network.target}</strong>
+                </div>
+              </div>
+            )}
+
+            {requireInstall && (
+              <div className="bg-orange-500 p-4 rounded-lg">
+                Cannot connect to the network. Please install Metamask.
+              </div>
+            )}
+
+            {network?.isSupported && network.data && (
+              <div className="fadeIn">
+                <span>Currently on </span>
+                <strong className="text-2xl">{network.data}</strong>
+              </div>
+            )}
           </div>
         </div>
       </div>

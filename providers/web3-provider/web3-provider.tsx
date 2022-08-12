@@ -16,7 +16,7 @@ interface IWeb3ApiState {
 }
 
 interface IWeb3ApiContext extends IWeb3ApiState {
-  isWeb3Loaded: boolean;
+  requireInstall: boolean;
   connect: () => Promise<void>;
 }
 
@@ -58,11 +58,11 @@ export const Web3Provider = ({ children }: PropsWithChildren) => {
   }, []);
 
   const _web3Api = useMemo(() => {
-    const { web3, provider } = web3Api;
+    const { web3, provider, isLoading } = web3Api;
 
     return {
       ...web3Api,
-      isWeb3Loaded: web3 != null,
+      requireInstall: !isLoading && !web3,
       connect: async () => {
         if (!provider) return console.error("Cannot connect to Metamsk");
 
