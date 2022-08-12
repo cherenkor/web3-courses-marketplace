@@ -28,8 +28,8 @@ export const UiButton = ({
     danger: cn("text-white bg-red-600", {
       "hover:bg-red-700": hoverable,
     }),
-    info: cn("text-black bg-sky-200", {
-      "hover:bg-sky-400": hoverable,
+    info: cn("text-indigo-700 bg-indigo-100", {
+      "hover:bg-indigo-200": hoverable,
     }),
     warning: cn("text-white bg-orange-600", {
       "hover:bg-orange-700": hoverable,
@@ -47,7 +47,7 @@ export const UiButton = ({
       )}
     >
       {isLoading ? (
-        <span className="fadeIn flex items-center">
+        <span className="flex items-center">
           <span className="mr-2">
             <svg
               className="animate-spin h-5 w-5 text-white"
@@ -73,7 +73,7 @@ export const UiButton = ({
           {children}
         </span>
       ) : (
-        <span className="fadeIn">{children}</span>
+        children
       )}
     </button>
   );
