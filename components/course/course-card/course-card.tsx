@@ -1,14 +1,16 @@
+import React from "react";
+import cn from "classnames";
 import { ICourse } from "data/courses/fetcher";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 interface IProps {
   course: ICourse;
+  disabled?: boolean;
   Footer?: () => JSX.Element;
 }
 
-export const CourseCard = ({ course, Footer }: IProps) => {
+export const CourseCard = ({ course, Footer, disabled = false }: IProps) => {
   const { coverImage, title, type, description, slug } = course;
 
   return (
@@ -16,7 +18,9 @@ export const CourseCard = ({ course, Footer }: IProps) => {
       <div className="flex h-full">
         <div className="flex-1 next-image-wrapper">
           <Image
-            className="object-cover"
+            className={cn("object-cover", {
+              "filter grayscale": disabled,
+            })}
             layout="responsive"
             width="200"
             height="230"

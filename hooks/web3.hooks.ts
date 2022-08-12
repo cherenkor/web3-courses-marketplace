@@ -75,3 +75,16 @@ export const useAccount = () => {
     },
   }), [swrResponse, web3]);
 };
+
+export const useWalletInfo = () => {
+
+  const { account } = useAccount();
+  const { network } = useNetwork();
+
+
+  return {
+    account,
+    network,
+    canPurchaseCurse: !!(account.data && network.isSupported)
+  }
+}

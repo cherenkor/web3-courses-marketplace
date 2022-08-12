@@ -6,6 +6,9 @@ module.exports = {
   ],
     theme: {
       extend: {
+        minHeight: {
+          'rate': '113px'
+        },
         flex: {
         "2": '2 2 0%'
       },
