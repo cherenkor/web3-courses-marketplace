@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { LoadingIcon } from "@components/common/loading-icon/loading-icon";
 
@@ -19,11 +19,17 @@ export const EthRates = ({ eth, ethPerItem, isLoading }: IProps) => {
     />
   );
 
+  const [loading, setLoading] = useState(isLoading);
+
+  useEffect(() => {
+    if (!isLoading) setLoading(false);
+  }, [isLoading]);
+
   return (
-    <div className="grid grid-cols-4 mb-5">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
       <div className="flex flex-1 items-stretch text-center">
         <div className="w-11/12 p-6 min-h-rate border drop-shadow rounded-md">
-          {isLoading && (
+          {loading && (
             <div className="fadeIn h-full flex items-center justify-center">
               <LoadingIcon className="text-indigo-500" />
             </div>
@@ -42,7 +48,7 @@ export const EthRates = ({ eth, ethPerItem, isLoading }: IProps) => {
       </div>
       <div className="flex flex-1 items-stretch text-center">
         <div className="w-11/12 p-6 min-h-rate border drop-shadow rounded-md">
-          {isLoading && (
+          {loading && (
             <div className="fadeIn h-full flex items-center justify-center">
               <LoadingIcon className="text-indigo-500" />
             </div>

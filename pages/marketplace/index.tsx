@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "@components/common/breadcrumbs/breadcrumbs";
 import { UiButton } from "@components/common/ui-button/ui-button";
 import { CourseCard } from "@components/course/course-card/course-card";
 import { CourseList } from "@components/course/course-list/course-list";
@@ -36,6 +37,10 @@ export default function Marketplace({
             ethPerItem={eth.perItem}
             isLoading={eth.isValidating}
           />
+        </div>
+
+        <div className="flex justify-center sm:justify-start flex-row sm:flex-row-reverse pb-4 px-4 sm:px-4 lg:px-8">
+          <Breadcrumbs />
         </div>
       </div>
       <CourseList courses={courses}>
