@@ -1,18 +1,14 @@
+import { useWalletInfo } from "hooks/web3.hooks";
 import { useWeb3 } from "providers/web3-provider/web3-provider";
 import React from "react";
 
-interface IProps {
-  address?: string;
-  network: {
-    data?: string;
-    target?: string;
-    isSupported: boolean;
-    hasInitialResponse: boolean;
-  };
-}
-
-export const WalletBar = ({ address, network }: IProps) => {
+export const WalletBar = () => {
   const { requireInstall } = useWeb3();
+  const {
+    account,
+    network: { data: networkData, target, isSupported, hasInitialResponse },
+  } = useWalletInfo();
+  const address = account.data;
 
   return (
     <section className="text-white bg-indigo-600 rounded-lg">
@@ -33,28 +29,27 @@ export const WalletBar = ({ address, network }: IProps) => {
             </div>
           </div>
           <div>
-            {/* {!network.hasInitialResponse && <div>Loading...</div>} */}
+            {/* {!hasInitialResponse && <div>Loading...</div>} */}
 
-            {network.hasInitialResponse && !network?.isSupported && (
+            {hasInitialResponse && !isSupported && (
               <div className="fadeIn bg-red-400 p-4 rounded-lg">
                 <div>Connected to the wrong network</div>
                 <div>
-                  Connect to:{" "}
-                  <strong className="text-2xl">{network.target}</strong>
+                  Connect to: <strong className="text-2xl">{target}</strong>
                 </div>
               </div>
             )}
 
             {requireInstall && (
               <div className="bg-orange-500 p-4 rounded-lg">
-                Cannot connect to the network. Please install Metamask.
+                Cannot connect to the Please install Metamask.
               </div>
             )}
 
-            {network?.isSupported && network.data && (
+            {isSupported && networkData && (
               <div className="fadeIn">
                 <span>Currently on </span>
-                <strong className="text-2xl">{network.data}</strong>
+                <strong className="text-2xl">{networkData}</strong>
               </div>
             )}
           </div>

@@ -4,3 +4,9 @@ export enum EMainRoute {
     Blogs = '/blogs',
     Wishlist = '/wishlist',
 }
+
+export enum EMarketplaceRoute {
+    Main = '/marketplace',
+    MyCourses = '/marketplace/courses/owned',
+    ManageCourses = '/marketplace/courses/manage'
+}
