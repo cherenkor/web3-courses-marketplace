@@ -8,6 +8,7 @@ import {
 } from "react";
 import Web3 from "web3";
 import detectEthereumProvider from "@metamask/detect-provider";
+import { EAvailableContracts, loadContract } from "@utils/load-contract";
 interface IWeb3ApiState {
   web3: Web3 | null;
   provider: any | null;
@@ -38,11 +39,17 @@ export const Web3Provider = ({ children }: PropsWithChildren) => {
 
       if (provider) {
         const web3 = new Web3(provider);
+        const contract = await loadContract(
+          EAvailableContracts.CourseMarketplace,
+          provider
+        );
+
+        console.log(contract);
 
         setWeb3Api({
           provider,
           web3,
-          contract: null,
+          contract,
           isLoading: false,
         });
       } else {
@@ -54,7 +61,7 @@ export const Web3Provider = ({ children }: PropsWithChildren) => {
       }
     };
 
-    loadProvider();
+    loadProvider().catch(console.error);
   }, []);
 
   const _web3Api = useMemo(() => {
