@@ -87,7 +87,7 @@ contract CourseMarketplace {
     }
 
     function getContractOwner() public view returns (address) {
-        owner;
+        return owner;
     }
 
     function setContractOwner(address newOwner) private {
