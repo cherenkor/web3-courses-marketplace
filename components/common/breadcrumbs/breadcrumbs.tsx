@@ -22,7 +22,7 @@ export const Breadcrumbs = ({ links }: IProps) => {
             })}
           >
             <ActiveLink href={link.path}>
-              <a className="text-lg">{link.title}</a>
+              <a>{link.title}</a>
             </ActiveLink>
           </li>
         ))}

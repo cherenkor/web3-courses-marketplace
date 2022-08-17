@@ -1,7 +1,7 @@
 import useSWR from "swr";
 
 const URL = "https://api.coingecko.com/api/v3/coins/ethereum?localization=false&tickers=false&community_data=false&developer_data=false&sparkline=false"
-const COURSE_PRICE = 15; // in dollars
+export const COURSE_PRICE = 10; // in dollars
 
 const fetcher = async (url: string) => {
   const res = await fetch(url)
