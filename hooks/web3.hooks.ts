@@ -81,7 +81,6 @@ export const useWalletInfo = () => {
   const { account } = useAccount();
   const { network } = useNetwork();
 
-
   return {
     account,
     network,

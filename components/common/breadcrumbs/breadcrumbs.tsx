@@ -1,7 +1,7 @@
 import { IBreadcrumbLink } from "@components/marketplace/marketplace-hero/links";
 import cn from "classnames";
-import Link from "next/link";
 import React from "react";
+import { ActiveLink } from "../active-link/active-link";
 
 interface IProps {
   links: IBreadcrumbLink[];
@@ -21,11 +21,9 @@ export const Breadcrumbs = ({ links }: IProps) => {
               "px-4": index !== 0,
             })}
           >
-            <Link href={link.path}>
-              <a className="font-medium text-gray-500 hover:text-gray-900">
-                {link.title}
-              </a>
-            </Link>
+            <ActiveLink href={link.path}>
+              <a className="text-lg">{link.title}</a>
+            </ActiveLink>
           </li>
         ))}
       </ol>
