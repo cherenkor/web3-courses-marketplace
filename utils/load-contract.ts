@@ -1,26 +1,28 @@
-import contract from "@truffle/contract";
+import Web3 from "web3";
 
 export enum EAvailableContracts {
     CourseMarketplace = 'CourseMarketplace'
 }
 
+const NETWORK_ID = process.env.NEXT_PUBLIC_NETWORK_ID as string
+
 export const loadContract = async (
     name: EAvailableContracts,
-    provider: any
+    web3: Web3
 ): Promise<any> => {
     const res = await fetch(`/contracts/${name}.json`);
     const Artifact = await res.json();
 
-    const _contract = contract(Artifact);
-    _contract.setProvider(provider);
-
-    let deployedContract = null;
+    let contract = null;
 
     try {
-        deployedContract = await _contract.deployed();
+        contract = new web3.eth.Contract(
+            Artifact.abi,
+            Artifact.networks[NETWORK_ID].address
+        )
     } catch {
         console.error(`Contract "${name}" can't be loaded`);
     }
 
-    return deployedContract;
+    return contract;
 };

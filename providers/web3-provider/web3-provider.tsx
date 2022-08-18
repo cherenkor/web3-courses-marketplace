@@ -41,7 +41,7 @@ export const Web3Provider = ({ children }: PropsWithChildren) => {
         const web3 = new Web3(provider);
         const contract = await loadContract(
           EAvailableContracts.CourseMarketplace,
-          provider
+          web3
         );
 
         console.log(contract);
