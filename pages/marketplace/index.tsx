@@ -5,8 +5,9 @@ import { BaseLayout } from "@components/layout/base-layout/base-layout";
 import { MarketplaceHero } from "@components/marketplace/marketplace-hero/marketplace-hero";
 import { IOrder } from "@components/order/order-modal/initial-order";
 import { OrderModal } from "@components/order/order-modal/order-modal";
+import { useWeb3 } from "@providers/web3-provider/web3-provider";
 import { ICourse, getAllCourses } from "data/courses/fetcher";
-import { useWalletInfo } from "hooks/web3.hooks";
+import { useAccount, useWalletInfo } from "hooks/web3.hooks";
 import { InferGetStaticPropsType } from "next";
 import { useState } from "react";
 
@@ -15,9 +16,49 @@ export default function Marketplace({
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const [selectedCourse, setSelectedCourse] = useState<ICourse | null>(null);
   const { canPurchaseCurse } = useWalletInfo();
+  const { account } = useAccount();
+  const { web3, contract } = useWeb3();
 
-  const purchaseCourse = (order: IOrder) => {
-    console.log(order);
+  const purchaseCourse = async (order: IOrder) => {
+    if (!selectedCourse?.id || !web3 || !account.data) {
+      console.error("Something went wrong, please try again");
+      return;
+    }
+
+    const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id);
+    const courseHash = web3.utils.soliditySha3(
+      {
+        type: "bytes16",
+        value: hexCourseId,
+      },
+      {
+        type: "address",
+        value: account.data,
+      }
+    );
+
+    const emailHash = web3.utils.sha3(order.email);
+
+    if (!emailHash || !courseHash) {
+      console.error("emailHash or courseHash was not provided");
+      return;
+    }
+
+    const proof = web3.utils.soliditySha3(
+      { type: "bytes32", value: emailHash },
+      { type: "bytes32", value: courseHash }
+    );
+
+    try {
+      const value = web3.utils.toWei(String(order.price));
+
+      await contract.methods.purchaseCourse(hexCourseId, proof).send({
+        from: account.data,
+        value,
+      });
+    } catch (err) {
+      console.error("Purchase course failed: ", err);
+    }
   };
 
   return (
