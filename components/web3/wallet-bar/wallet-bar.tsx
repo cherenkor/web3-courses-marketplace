@@ -12,13 +12,13 @@ export const WalletBar = () => {
 
   return (
     <section className="text-white bg-indigo-600 rounded-lg">
-      <div className="p-8">
-        <h1 className="text-2xl">Hello, {address}</h1>
+      <div className="p-8 text-center sm:text-left">
+        <h1 className="text-2xl break-all">Hello, {address}</h1>
         <h2 className="subtitle mb-5 text-xl">
           I hope you are having a great day!
         </h2>
-        <div className="flex justify-between items-center">
-          <div className="sm:flex sm:justify-center lg:justify-start">
+        <div className="flex flex-col sm:flex-row justify-between items-center">
+          <div className="mb-4 sm:mb-0 sm:flex sm:justify-center lg:justify-start">
             <div className="rounded-md shadow">
               <a
                 href="#"
@@ -29,8 +29,6 @@ export const WalletBar = () => {
             </div>
           </div>
           <div>
-            {/* {!hasInitialResponse && <div>Loading...</div>} */}
-
             {hasInitialResponse && !isSupported && (
               <div className="fadeIn bg-red-400 p-4 rounded-lg">
                 <div>Connected to the wrong network</div>

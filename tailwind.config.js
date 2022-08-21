@@ -1,27 +1,36 @@
 /** @type {import('tailwindcss').Config} */
+
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
-   content: [
+  content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
-    theme: {
-      extend: {
-        minHeight: {
-          'rate': '113px'
-        },
-        flex: {
-        "2": '2 2 0%'
+  theme: {
+    screens: {
+      xs: "475px",
+      ...defaultTheme.screens,
+    },
+    extend: {
+      minHeight: {
+        rate: "113px",
+      },
+      flex: {
+        2: "2 2 0%",
+        3: "3 3 0%",
+        4: "4 4 0%",
       },
       maxWidth: {
-        "8xl": "1920px"
+        "8xl": "1920px",
       },
+    },
+    variants: {
+      extend: {
+        opacity: ["disabled"],
+        cursor: ["disabled"],
       },
-      variants: {
-        extend: {
-          opacity: ['disabled'],
-          cursor: ['disabled'],
-        }
-      }
+    },
   },
   plugins: [],
-}
+};

@@ -6,6 +6,7 @@ import { MarketplaceHero } from "@components/marketplace/marketplace-hero/market
 import { IOrder } from "@components/order/order-modal/initial-order";
 import { OrderModal } from "@components/order/order-modal/order-modal";
 import { useWeb3 } from "@providers/web3-provider/web3-provider";
+import { contractParamsFromCourse } from "@utils/contract-params-from-course";
 import { ICourse, getAllCourses } from "data/courses/fetcher";
 import { useAccount, useWalletInfo } from "hooks/web3.hooks";
 import { InferGetStaticPropsType } from "next";
@@ -25,29 +26,18 @@ export default function Marketplace({
       return;
     }
 
-    const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id);
-    const courseHash = web3.utils.soliditySha3(
-      {
-        type: "bytes16",
-        value: hexCourseId,
-      },
-      {
-        type: "address",
-        value: account.data,
-      }
-    );
-
-    const emailHash = web3.utils.sha3(order.email);
+    const { hexCourseId, courseHash, emailHash, proof } =
+      contractParamsFromCourse({
+        web3,
+        account: account.data,
+        email: order.email,
+        courseId: selectedCourse.id,
+      });
 
     if (!emailHash || !courseHash) {
       console.error("emailHash or courseHash was not provided");
       return;
     }
-
-    const proof = web3.utils.soliditySha3(
-      { type: "bytes32", value: emailHash },
-      { type: "bytes32", value: courseHash }
-    );
 
     try {
       const value = web3.utils.toWei(String(order.price));

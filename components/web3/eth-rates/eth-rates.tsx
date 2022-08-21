@@ -28,7 +28,7 @@ export const EthRates = () => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
       <div className="flex flex-1 items-stretch text-center">
-        <div className="w-11/12 p-6 min-h-rate border drop-shadow rounded-md">
+        <div className="w-full sm:w-11/12 p-6 min-h-rate border drop-shadow rounded-md">
           <div className="fadeIn">
             <div className="flex items-center justify-center">
               {loading ? (
@@ -37,17 +37,17 @@ export const EthRates = () => {
                 <>
                   <Logo />
                   {eth?.data && (
-                    <span className="text-2xl font-bold"> = ${eth?.data}</span>
+                    <span className="text-xl font-bold"> = ${eth?.data}</span>
                   )}
                 </>
               )}
             </div>
-            <p className="text-xl text-gray-500">Current eth Price</p>
+            <p className="text-lg text-gray-500">Current eth Price</p>
           </div>
         </div>
       </div>
       <div className="flex flex-1 items-stretch text-center">
-        <div className="w-11/12 p-6 min-h-rate border drop-shadow rounded-md">
+        <div className="w-full sm:w-11/12 p-6 min-h-rate border drop-shadow rounded-md">
           <div className="fadeIn">
             <div className="flex items-center justify-center">
               {loading ? (
@@ -56,14 +56,14 @@ export const EthRates = () => {
                 <>
                   <Logo />
                   {ethPerItem && (
-                    <span className="text-2xl font-bold">
+                    <span className="text-xl font-bold">
                       {ethPerItem} = {COURSE_PRICE}$
                     </span>
                   )}
                 </>
               )}
             </div>
-            <p className="text-xl text-gray-500">Price per course</p>
+            <p className="text-lg text-gray-500">Price per course</p>
           </div>
         </div>
       </div>

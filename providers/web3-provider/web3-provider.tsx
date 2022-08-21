@@ -44,8 +44,6 @@ export const Web3Provider = ({ children }: PropsWithChildren) => {
           web3
         );
 
-        console.log(contract);
-
         setWeb3Api({
           provider,
           web3,
@@ -70,18 +68,21 @@ export const Web3Provider = ({ children }: PropsWithChildren) => {
     return {
       ...web3Api,
       requireInstall: !isLoading && !web3,
-      connect: async () => {
-        if (!provider) return console.error("Cannot connect to Metamsk");
-
-        try {
-          await provider.request({
-            method: "eth_requestAccounts",
-          });
-        } catch {
-          alert("Cannot retreive account. Page will be reloaded.");
-          location.reload();
-        }
-      },
+      connect: provider
+        ? async () => {
+            try {
+              await provider.request({
+                method: "eth_requestAccounts",
+              });
+            } catch {
+              alert("Cannot retreive account. Page will be reloaded.");
+              location.reload();
+            }
+          }
+        : async () =>
+            console.error(
+              "Cannot connect to Metamask, try to reload your browser please."
+            ),
     };
   }, [web3Api]);
 

@@ -31,14 +31,17 @@ export const useNetwork = () => {
     });
   }, [web3, provider, swrResponse]);
 
-  return useMemo(() => ({
-    network: {
-      ...swrResponse,
-      hasInitialResponse: !!swrResponse.data || !!swrResponse.error,
-      isSupported: swrResponse.data === targetNetwork,
-      target: targetNetwork,
-    },
-  }), [swrResponse]);
+  return useMemo(
+    () => ({
+      network: {
+        ...swrResponse,
+        hasInitialResponse: !!swrResponse.data || !!swrResponse.error,
+        isSupported: swrResponse.data === targetNetwork,
+        target: targetNetwork,
+      },
+    }),
+    [swrResponse]
+  );
 };
 
 const whitelistedAddresses: Record<any, boolean> = {
@@ -48,11 +51,17 @@ const whitelistedAddresses: Record<any, boolean> = {
 export const useAccount = () => {
   const { web3, provider } = useWeb3();
   const swrResponse = useSWR(
-    web3 === null ? null : "web3/accounts",
+    web3 ? "web3/accounts" : null,
     async () => {
       const accounts = await web3?.eth.getAccounts();
 
-      return accounts?.[0];
+      if (!accounts?.[0]) {
+        throw new Error(
+          "Cannot retreive an account. Please refresh the browser."
+        );
+      }
+
+      return accounts[0];
     },
     {
       isPaused: () => !web3,
@@ -60,12 +69,16 @@ export const useAccount = () => {
   );
 
   useEffect(() => {
-    provider?.on("accountsChanged", ([newAccount]: string[]) =>
-      swrResponse.mutate(newAccount)
-    );
-  }, [web3, provider, swrResponse]);
+    const mutator = (accounts: string[]) =>
+      swrResponse.mutate(accounts[0] ?? null);
+    provider?.on("accountsChanged", mutator);
 
-  return useMemo(() => ({
+    return () => {
+      provider?.removeListener("accountsChanged", mutator);
+    };
+  }, [provider, swrResponse.mutate]);
+
+  return {
     isAdmin:
       swrResponse.data &&
       whitelistedAddresses[web3?.utils.keccak256(swrResponse.data) || ""],
@@ -73,17 +86,16 @@ export const useAccount = () => {
       ...swrResponse,
       hasInitialResponse: !!swrResponse.data || !!swrResponse.error,
     },
-  }), [swrResponse, web3]);
+  };
 };
 
 export const useWalletInfo = () => {
-
   const { account } = useAccount();
   const { network } = useNetwork();
 
   return {
     account,
     network,
-    canPurchaseCurse: !!(account.data && network.isSupported)
-  }
-}
+    canPurchaseCurse: !!(account.data && network.isSupported),
+  };
+};
