@@ -2,7 +2,7 @@ import { PropsWithChildren, useState } from "react";
 
 const TYPES = {
   success: "green",
-  warning: "yellow",
+  warning: "orange",
   danger: "red",
 };
 
@@ -20,12 +20,12 @@ export const Alert = ({ children, type = "success" }: IProps) => {
   const messageType = TYPES[type];
 
   return (
-    <div className={`bg-${messageType}-100 rounded-xl mb-3`}>
+    <div className={`bg-${messageType}-200 rounded-xl mb-3`}>
       <div className="max-w-7xl mx-auto py-3 px-3 sm:px-3 lg:px-3">
         <div className="flex items-center justify-between flex-wrap">
           <div className="w-0 flex-1 flex items-center">
             <p className={`ml-3 font-medium text-${messageType}-900 truncate`}>
-              <span className="hidden md:inline">{children}</span>
+              {children}
             </p>
           </div>
           <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-3">

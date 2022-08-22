@@ -2,12 +2,13 @@ import Image from "next/image";
 import React from "react";
 
 interface IProps {
+  isOwner?: boolean;
   title?: string;
   description?: string;
   image?: string;
 }
 
-export const CourseHero = ({ title, description, image }: IProps) => {
+export const CourseHero = ({ isOwner, title, description, image }: IProps) => {
   const substringDivide = (title?.length || 0) / 2;
   const substring1 = title?.substring(0, substringDivide);
   const substring2 = title?.substring(substringDivide);
@@ -29,6 +30,11 @@ export const CourseHero = ({ title, description, image }: IProps) => {
             <div className="relative pt-6 px-4 sm:px-6 lg:px-8"></div>
             <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
               <div className="sm:text-center lg:text-left">
+                {isOwner && (
+                  <div className="fadeIn text-lg inline-block p-4 py-2 rounded-full font-bold bg-green-200 text-green-700">
+                    You are owner of:
+                  </div>
+                )}
                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                   <span className="block xl:inline">{substring1}</span>
                   <span className="block text-indigo-600 xl:inline">

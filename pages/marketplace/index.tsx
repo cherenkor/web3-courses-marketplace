@@ -7,10 +7,11 @@ import { IOrder } from "@components/order/order-modal/initial-order";
 import { OrderModal } from "@components/order/order-modal/order-modal";
 import { useWeb3 } from "@providers/web3-provider/web3-provider";
 import { contractParamsFromCourse } from "@utils/contract-params-from-course";
-import { ICourse, getAllCourses } from "data/courses/fetcher";
+import { getAllCourses } from "data/courses/fetcher";
 import { useAccount, useWalletInfo } from "hooks/web3.hooks";
 import { InferGetStaticPropsType } from "next";
 import { useState } from "react";
+import { ICourse } from "types/course";
 
 export default function Marketplace({
   courses,
