@@ -3,18 +3,18 @@ import React from "react";
 
 export const CourseFilter = () => {
   return (
-    <div className="flex items-center my-4">
-      <div className="flex mr-2 relative rounded-md">
+    <div className="flex flex-wrap sm:flex-row justify-center items-center my-4">
+      <div className="flex mr-0 sm:mr-2 mb-4 relative rounded-md">
         <input
           type="text"
           name="account"
           id="account"
-          className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
+          className="w-52 xs:w-72 sm:w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
           placeholder="0x2341ab..."
         />
         <UiButton>Search</UiButton>
       </div>
-      <div className="relative text-gray-700">
+      <div className="relative mb-4 text-gray-700">
         <select
           className="w-72 h-10 pl-3 pr-6 text-base placeholder-gray-600 border rounded-lg appearance-none focus:shadow-outline"
           placeholder="Regular input"

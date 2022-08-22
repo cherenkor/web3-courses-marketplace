@@ -7,12 +7,14 @@ import { MarketplaceHero } from "@components/marketplace/marketplace-hero/market
 import { getAllCourses } from "data/courses/fetcher";
 import { useOwnedCourses } from "hooks/use-owned-courses";
 import { InferGetStaticPropsType } from "next";
+import { useRouter } from "next/router";
 
 export default function OwnedCourses({
   courses,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { ownedCourses, error, isValidating } = useOwnedCourses(courses);
+  const { ownedCourses, error } = useOwnedCourses(courses);
   const isLoading = !ownedCourses && !error;
+  const router = useRouter();
 
   return (
     <>
@@ -29,7 +31,9 @@ export default function OwnedCourses({
           <OwnedCourseCard key={course.id} course={course}>
             {/* <Alert>Purchased</Alert>  */}
 
-            <UiButton>Watch the course</UiButton>
+            <UiButton onClick={() => router.push(`/courses/${course.slug}`)}>
+              Watch the course
+            </UiButton>
           </OwnedCourseCard>
         ))}
       </section>

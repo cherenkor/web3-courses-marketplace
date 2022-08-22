@@ -8,7 +8,7 @@ interface IProps extends PropsWithChildren {
   disabled?: boolean;
   hoverable?: boolean;
   className?: string;
-  variant?: "primary" | "secondary" | "danger" | "info" | "warning";
+  variant?: "primary" | "secondary" | "danger" | "info" | "warning" | "white";
 }
 
 export const UiButton = ({
@@ -35,6 +35,9 @@ export const UiButton = ({
     warning: cn("text-white bg-orange-600", {
       "hover:bg-orange-700": hoverable,
     }),
+    white: cn("text-black bg-white", {
+      "hover:bg-slate-100": hoverable,
+    }),
   };
 
   return (
@@ -42,7 +45,7 @@ export const UiButton = ({
       type="button"
       {...props}
       className={cn(
-        "disabled:opacity-50 disabled:cursor-not-allowed px-6 py-3 border cursor-pointer rounded-md text-base font-medium",
+        "disabled:opacity-50 disabled:cursor-not-allowed px-3 py-2 sm:px-6 sm:py-3 border cursor-pointer rounded-md text-base font-medium",
         className,
         variants[variant]
       )}

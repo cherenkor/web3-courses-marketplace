@@ -14,7 +14,7 @@ export const Navbar = () => {
       <div className="relative pt-6 px-4 sm:px-0">
         <nav className="relative" aria-label="Global">
           <div className="flex flex-wrap sm:flex-nowrap justify-between items-center">
-            <div className="w-full px-8 sm:px-0 flex justify-between sm:justify-start items-center">
+            <div className="w-full px-8 sm:px-0 flex justify-around sm:justify-start items-center">
               <Link href={EMainRoute.Home}>
                 <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Home
@@ -31,7 +31,7 @@ export const Navbar = () => {
                 </a>
               </Link>
             </div>
-            <div className="w-full px-8 sm:px-0 flex justify-between items-center sm:justify-end mt-4 sm:mt-0">
+            <div className="w-full px-8 sm:px-0 flex justify-around items-center sm:justify-end mt-4 sm:mt-0">
               <Link href={EMainRoute.Wishlist}>
                 <a className="font-medium mr-8 text-gray-500 hover:text-gray-900">
                   Wishlist
@@ -43,7 +43,7 @@ export const Navbar = () => {
                   Loading...
                 </UiButton>
               ) : !!account.data ? (
-                <UiButton hoverable={false} className="cursor-default">
+                <UiButton className="cursor-default">
                   <span className="flex">
                     <span className="mr-2">
                       {isAdmin ? (
