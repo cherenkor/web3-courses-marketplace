@@ -1,11 +1,14 @@
 import cn from "classnames";
+import Link from "next/link";
 import React from "react";
+import { ECourseState } from "types/course";
 
 interface IProps {
   locked: boolean;
+  courseState: ECourseState;
 }
 
-export const Curriculum = ({ locked }: IProps) => {
+export const Curriculum = ({ locked = true, courseState }: IProps) => {
   const lectures = [
     "How to init App",
     "How to get a help",
@@ -67,12 +70,30 @@ export const Curriculum = ({ locked }: IProps) => {
                         </span>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <a
-                          href="#"
-                          className="text-indigo-600 hover:text-indigo-900"
-                        >
-                          {locked ? "Get Access" : "Play"}
-                        </a>
+                        {locked ? (
+                          <>
+                            {courseState === ECourseState.Deactivated && (
+                              <Link href="/marketplace">
+                                <a className="text-indigo-600 hover:text-indigo-900">
+                                  Get Access
+                                </a>
+                              </Link>
+                            )}
+                            {courseState === ECourseState.Purchased && (
+                              <Link href="/faq">
+                                <a className="text-orange-500 hover:text-orange-900">
+                                  Waiting for activation
+                                </a>
+                              </Link>
+                            )}
+                          </>
+                        ) : (
+                          <Link href="/watch">
+                            <a className="text-indigo-500 hover:text-orange-900">
+                              Watch
+                            </a>
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   ))}

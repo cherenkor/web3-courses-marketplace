@@ -1,4 +1,4 @@
-import { ICourse, IOwnedCourse } from "../types/course";
+import { ECourseState, ICourse, IOwnedCourse } from "../types/course";
 import Web3 from "web3";
 import useSWR from "swr";
 import { useAccount } from "./web3.hooks";
@@ -41,5 +41,9 @@ export const useOwnedCourse = (course: ICourse) => {
   return {
     ...swrRes,
     ownedCourse: data,
+    isLoading: !data && !swrRes?.error,
+    isLocked:
+      data?.state === ECourseState.Purchased ||
+      data?.state === ECourseState.Deactivated,
   };
 };

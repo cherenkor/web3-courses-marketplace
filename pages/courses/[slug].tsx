@@ -1,4 +1,5 @@
 import { Alert } from "@components/common/alert/alert";
+import { Loader } from "@components/common/loader/loader";
 import { Modal } from "@components/common/modal/modal";
 import { CourseHero } from "@components/course/course-hero/course-hero";
 import { CourseKeypoints } from "@components/course/course-keypoints/course-keypoints";
@@ -14,7 +15,7 @@ export default function Course({
   course,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { title, description, coverImage, wsl } = course;
-  const { ownedCourse } = useOwnedCourse(course);
+  const { ownedCourse, isLocked, isLoading } = useOwnedCourse(course);
   const state = ownedCourse?.state;
 
   return (
@@ -30,7 +31,9 @@ export default function Course({
 
       <CourseKeypoints points={wsl} />
 
-      {!!state && (
+      {isLoading && <Loader />}
+
+      {!isLoading && !!state && (
         <div className="max-w-5lg mx-auto">
           {state === ECourseState.Purchased && (
             <Alert type="warning">
@@ -60,7 +63,9 @@ export default function Course({
         </div>
       )}
 
-      <Curriculum locked={true} />
+      {!isLoading && state && (
+        <Curriculum locked={isLocked} courseState={state} />
+      )}
 
       <Modal />
     </>
