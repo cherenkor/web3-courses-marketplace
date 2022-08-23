@@ -7,30 +7,34 @@ import { MarketplaceHero } from "@components/marketplace/marketplace-hero/market
 import { getAllCourses } from "data/courses/fetcher";
 import { useOwnedCourses } from "hooks/use-owned-courses";
 import { InferGetStaticPropsType } from "next";
+import Link from "next/link";
 import { useRouter } from "next/router";
+import { EMarketplaceRoute } from "types/main-route";
 
 export default function OwnedCourses({
   courses,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { ownedCourses, error } = useOwnedCourses(courses);
-  const isLoading = !ownedCourses && !error;
+  const { ownedCourses, hasInitialResponse } = useOwnedCourses(courses);
   const router = useRouter();
 
   return (
     <>
       <MarketplaceHero />
       <section className="grid grid-cols-1">
-        {isLoading && <Loader />}
-        {!isLoading && !ownedCourses?.length && (
-          <h2 className="subtitle mb-5 text-xl text-red-500">
-            No purchased courses. Please go to the marketplace and buy one :)
-          </h2>
+        {!hasInitialResponse && <Loader />}
+        {hasInitialResponse && !ownedCourses?.length && (
+          <Alert type="warning">
+            <div>You don&apos;t own any courses.</div>
+            <Link href={EMarketplaceRoute.Main}>
+              <a className="font-normal hover:underline">
+                <i>Purchase Course</i>
+              </a>
+            </Link>
+          </Alert>
         )}
 
         {(ownedCourses || []).map((course) => (
           <OwnedCourseCard key={course.id} course={course}>
-            {/* <Alert>Purchased</Alert>  */}
-
             <UiButton onClick={() => router.push(`/courses/${course.slug}`)}>
               Watch the course
             </UiButton>

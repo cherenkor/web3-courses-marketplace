@@ -41,7 +41,7 @@ export const useOwnedCourse = (course: ICourse) => {
   return {
     ...swrRes,
     ownedCourse: data,
-    isLoading: !data && !swrRes?.error,
+    hasInitialResponse: !!data || !!swrRes.error,
     isLocked:
       data?.state === ECourseState.Purchased ||
       data?.state === ECourseState.Deactivated,

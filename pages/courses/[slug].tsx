@@ -15,7 +15,7 @@ export default function Course({
   course,
 }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { title, description, coverImage, wsl } = course;
-  const { ownedCourse, isLocked, isLoading } = useOwnedCourse(course);
+  const { ownedCourse, isLocked, hasInitialResponse } = useOwnedCourse(course);
   const state = ownedCourse?.state;
 
   return (
@@ -31,9 +31,9 @@ export default function Course({
 
       <CourseKeypoints points={wsl} />
 
-      {isLoading && <Loader />}
+      {!hasInitialResponse && <Loader />}
 
-      {!isLoading && !!state && (
+      {hasInitialResponse && !!state && (
         <div className="max-w-5lg mx-auto">
           {state === ECourseState.Purchased && (
             <Alert type="warning">
