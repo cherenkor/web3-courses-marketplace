@@ -1,3 +1,4 @@
+import { enhanceSwrHook } from "@utils/enhance-swr-hook";
 import { useWeb3 } from "providers/web3-provider/web3-provider";
 import { useEffect, useMemo } from "react";
 import useSWR from "swr";
@@ -19,28 +20,35 @@ const targetNetwork =
 
 export const useNetwork = () => {
   const { web3, provider } = useWeb3();
-  const swrResponse = useSWR(web3 ? "web3/network" : null, async () => {
+  const swrRes = useSWR(web3 ? "web3/network" : null, async () => {
     const chainId = await web3?.eth.getChainId();
 
     return NETWORKS_MAP[chainId as number] || NETWORKS_MAP[0];
   });
 
+
   useEffect(() => {
-    provider?.on("chainChanged", (chainId: string) => {
-      swrResponse.mutate(parseInt(chainId, 16) as unknown as string);
-    });
-  }, [web3, provider, swrResponse]);
+    const mutator = (chainId: string) => {
+      swrRes.mutate(parseInt(chainId, 16) as unknown as string);
+    }
+    
+    provider?.on("chainChanged", mutator);
+
+    return () => {
+      provider?.removeListener("chainChanged", mutator);
+    };
+  }, [provider, swrRes]);
 
   return useMemo(
     () => ({
       network: {
-        ...swrResponse,
-        hasInitialResponse: !!swrResponse.data || !!swrResponse.error,
-        isSupported: swrResponse.data === targetNetwork,
+        ...swrRes,
+        ...enhanceSwrHook(swrRes),
+        isSupported: swrRes.data === targetNetwork,
         target: targetNetwork,
       },
     }),
-    [swrResponse]
+    [swrRes]
   );
 };
 
@@ -50,7 +58,7 @@ const whitelistedAddresses: Record<any, boolean> = {
 
 export const useAccount = () => {
   const { web3, provider } = useWeb3();
-  const swrResponse = useSWR(
+  const swrRes = useSWR(
     web3 ? "web3/accounts" : null,
     async () => {
       const accounts = await web3?.eth.getAccounts();
@@ -69,22 +77,23 @@ export const useAccount = () => {
   );
 
   useEffect(() => {
-    const mutator = (accounts: string[]) =>
-      swrResponse.mutate(accounts[0] ?? null);
+    const mutator = ([account]: string[]) =>
+      swrRes.mutate(account ?? null);
+    
     provider?.on("accountsChanged", mutator);
 
     return () => {
       provider?.removeListener("accountsChanged", mutator);
     };
-  }, [provider, swrResponse.mutate]);
+  }, [provider, swrRes]);
 
   return {
     isAdmin:
-      swrResponse.data &&
-      whitelistedAddresses[web3?.utils.keccak256(swrResponse.data) || ""],
+      swrRes.data &&
+      whitelistedAddresses[web3?.utils.keccak256(swrRes.data) || ""],
     account: {
-      ...swrResponse,
-      hasInitialResponse: !!swrResponse.data || !!swrResponse.error,
+      ...swrRes,
+      ...enhanceSwrHook(swrRes),
     },
   };
 };

@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { createCourseHash } from './create-course-hash';
 
 interface IArgs {
     web3: Web3;
@@ -14,19 +15,9 @@ export const contractParamsFromCourse = ({
   courseId,
 }: IArgs) => {
   const hexCourseId = courseId ? web3.utils.utf8ToHex(courseId) : "";
-  const courseHash =
-    hexCourseId && account
-      ? web3.utils.soliditySha3(
-          {
-            type: "bytes16",
-            value: hexCourseId,
-          },
-          {
-            type: "address",
-            value: account,
-          }
-        )
-      : "";
+  const courseHash = createCourseHash({
+    web3, account, courseId
+  })
 
   const emailHash = email ? web3.utils.sha3(email) : "";
 

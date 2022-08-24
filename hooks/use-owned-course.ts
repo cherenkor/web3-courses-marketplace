@@ -1,22 +1,23 @@
+import { enhanceSwrHook } from './../utils/enhance-swr-hook';
 import { ECourseState, ICourse, IOwnedCourse } from "../types/course";
 import Web3 from "web3";
 import useSWR from "swr";
 import { useAccount } from "./web3.hooks";
 import { useWeb3 } from "providers/web3-provider/web3-provider";
-import { contractParamsFromCourse } from "@utils/contract-params-from-course";
 import { normilizeOwnedCourse } from "@utils/nomalize-owned-course";
+import { createCourseHash } from '@utils/create-course-hash';
 
 export const useOwnedCourse = (course: ICourse) => {
   const { web3, contract } = useWeb3();
   const { account } = useAccount();
 
-  const { data, ...swrRes } = useSWR(
+  const swrRes = useSWR(
     () =>
       web3 && contract && account.data
         ? `web3/ownedCourse/${account.data}`
         : null,
     async () => {
-      const { courseHash } = contractParamsFromCourse({
+      const courseHash = createCourseHash({
         web3: web3 as Web3,
         account: account.data,
         courseId: course.id,
@@ -40,10 +41,10 @@ export const useOwnedCourse = (course: ICourse) => {
 
   return {
     ...swrRes,
-    ownedCourse: data,
-    hasInitialResponse: !!data || !!swrRes.error,
+    ...enhanceSwrHook(swrRes),
+    ownedCourse: swrRes.data,
     isLocked:
-      data?.state === ECourseState.Purchased ||
-      data?.state === ECourseState.Deactivated,
+      swrRes.data?.state === ECourseState.Purchased ||
+      swrRes.data?.state === ECourseState.Deactivated,
   };
 };

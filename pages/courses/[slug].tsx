@@ -34,7 +34,7 @@ export default function Course({
       {!hasInitialResponse && <Loader />}
 
       {hasInitialResponse && !!state && (
-        <div className="max-w-5lg mx-auto">
+        <div className="max-w-5lg mx-auto mb-6">
           {state === ECourseState.Purchased && (
             <Alert type="warning">
               Course is purchased and waiting for the activation. Process can
@@ -63,9 +63,7 @@ export default function Course({
         </div>
       )}
 
-      {!isLoading && state && (
-        <Curriculum locked={isLocked} courseState={state} />
-      )}
+      {state && <Curriculum locked={isLocked} courseState={state} />}
 
       <Modal />
     </>

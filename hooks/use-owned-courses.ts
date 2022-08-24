@@ -3,14 +3,16 @@ import Web3 from "web3";
 import useSWR from "swr";
 import { useAccount } from "./web3.hooks";
 import { useWeb3 } from "providers/web3-provider/web3-provider";
-import { contractParamsFromCourse } from "@utils/contract-params-from-course";
+
 import { normilizeOwnedCourse } from "@utils/nomalize-owned-course";
+import { enhanceSwrHook } from "@utils/enhance-swr-hook";
+import { createCourseHash } from "@utils/create-course-hash";
 
 export const useOwnedCourses = (courses: ICourse[]) => {
   const { web3, contract } = useWeb3();
   const { account } = useAccount();
 
-  const { data, ...swrRes } = useSWR(
+  const swrRes = useSWR(
     () =>
       web3 && contract && account.data
         ? `web3/ownedCourses/${account.data}`
@@ -25,7 +27,7 @@ export const useOwnedCourses = (courses: ICourse[]) => {
           continue;
         }
 
-        const { courseHash } = contractParamsFromCourse({
+        const courseHash = createCourseHash({
           web3: web3 as Web3,
           account: account.data,
           courseId: course.id,
@@ -52,7 +54,7 @@ export const useOwnedCourses = (courses: ICourse[]) => {
 
   return {
     ...swrRes,
-    hasInitialResponse: !!data || !!swrRes.error,
-    ownedCourses: data,
+    ...enhanceSwrHook(swrRes),
+    ownedCourses: swrRes.data,
   };
 };
